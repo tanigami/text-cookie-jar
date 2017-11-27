@@ -1,18 +1,16 @@
 <?php
 
-namespace Shippinno\StringCookieJar;
+namespace Shippinno\InMemoryCookieJar;
 
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
 use RuntimeException;
 
-class StringCookieJar extends CookieJar
+class InMemoryCookieJar extends CookieJar
 {
-
-    public function __construct($cookieJson = '', $storeSessionCookies = false)
+    public function __construct($cookieJson = '')
     {
         parent::__construct();
-        $this->storeSessionCookies = $storeSessionCookies;
         $this->load($cookieJson);
     }
 

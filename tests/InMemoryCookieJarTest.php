@@ -1,29 +1,29 @@
 <?php
 
-namespace Shippinno\StringCookieJar;
+namespace Shippinno\InMemoryCookieJar;
 
 use GuzzleHttp\Cookie\SetCookie;
 use PHPUnit\Framework\TestCase;
 
-class StringCookieJarTest extends TestCase
+class InMemoryCookieJarTest extends TestCase
 {
     /**
      * @expectedException \RuntimeException
      */
     public function testValidatesCookieFile()
     {
-        new StringCookieJar('aaa');
+        new InMemoryCookieJar('aaa');
     }
 
     public function testLoadsFromJsonString()
     {
-        $jar = new StringCookieJar;
+        $jar = new InMemoryCookieJar;
         $this->assertEquals([], $jar->getIterator()->getArrayCopy());
     }
 
     public function testPersistsToFile()
     {
-        $jar = new StringCookieJar;
+        $jar = new InMemoryCookieJar;
         $jar->setCookie(new SetCookie([
             'Name'    => 'foo',
             'Value'   => 'bar',
@@ -48,7 +48,7 @@ class StringCookieJarTest extends TestCase
         unset($jar);
 
         // Load the cookieJar from the file
-        $jar = new StringCookieJar($json);
+        $jar = new InMemoryCookieJar($json);
         $this->assertEquals(2, count($jar));
     }
 }

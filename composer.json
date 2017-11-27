@@ -1,5 +1,5 @@
 {
-    "name": "shippinno/string-cookie-jar",
+    "name": "shippinno/in-memory-cookie-jar",
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "^6.3"
@@ -9,12 +9,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Shippinno\\StringCookieJar\\": "src/"
+            "Shippinno\\InMemoryCookieJar\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Shippinno\\StringCookieJar\\": "tests/"
+            "Shippinno\\InMemoryCookieJar\\": "tests/"
         }
     },
     "scripts": {
