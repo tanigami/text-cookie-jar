@@ -1,0 +1,24 @@
+{
+    "name": "shippinno/string-cookie-jar",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Shippinno\\StringCookieJar\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Shippinno\\StringCookieJar\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "cs": "vendor/bin/phpcs src"
+    }
+}
