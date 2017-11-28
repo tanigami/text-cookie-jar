@@ -7,48 +7,25 @@ use PHPUnit\Framework\TestCase;
 
 class InMemoryCookieJarTest extends TestCase
 {
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testValidatesCookieFile()
+    public function testRawCookiesAreSet()
     {
-        new InMemoryCookieJar('aaa');
+        $jar = new InMemoryCookieJar([
+            "sessionid=38afes7a8; HttpOnly; Domain=example.com; Path=/",
+            "id=a3fWa; Domain=example.com; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly",
+        ]);
+        $this->assertCount(2, $jar);
+        $this->assertSame("sessionid=38afes7a8; Domain=example.com; Path=/; HttpOnly", $jar->getIterator()[0]->__toString());
+        $this->assertSame("id=a3fWa; Domain=example.com; Path=/; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly", $jar->getIterator()[1]->__toString());
     }
 
-    public function testLoadsFromJsonString()
+    public function testGuzzleSetCookiesAreSet()
     {
-        $jar = new InMemoryCookieJar;
-        $this->assertEquals([], $jar->getIterator()->getArrayCopy());
-    }
-
-    public function testPersistsToFile()
-    {
-        $jar = new InMemoryCookieJar;
-        $jar->setCookie(new SetCookie([
-            'Name'    => 'foo',
-            'Value'   => 'bar',
-            'Domain'  => 'foo.com',
-            'Expires' => time() + 1000
-        ]));
-        $jar->setCookie(new SetCookie([
-            'Name'    => 'baz',
-            'Value'   => 'bar',
-            'Domain'  => 'foo.com',
-            'Expires' => time() + 1000
-        ]));
-        $jar->setCookie(new SetCookie([
-            'Name'    => 'boo',
-            'Value'   => 'bar',
-            'Domain'  => 'foo.com',
-        ]));
-        $this->assertEquals(3, count($jar));
-
-        $this->assertNotEmpty($jar->getJson());
-        $json = $jar->getJson();
-        unset($jar);
-
-        // Load the cookieJar from the file
-        $jar = new InMemoryCookieJar($json);
-        $this->assertEquals(2, count($jar));
+        $jar = new InMemoryCookieJar([
+            SetCookie::fromString("sessionid=38afes7a8; HttpOnly; Domain=example.com; Path=/"),
+            SetCookie::fromString("id=a3fWa; Domain=example.com; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly"),
+        ]);
+        $this->assertCount(2, $jar);
+        $this->assertSame("sessionid=38afes7a8; Domain=example.com; Path=/; HttpOnly", $jar->getIterator()[0]->__toString());
+        $this->assertSame("id=a3fWa; Domain=example.com; Path=/; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly", $jar->getIterator()[1]->__toString());
     }
 }

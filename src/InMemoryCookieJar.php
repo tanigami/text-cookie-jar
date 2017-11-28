@@ -4,43 +4,23 @@ namespace Shippinno\InMemoryCookieJar;
 
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
-use RuntimeException;
+use InvalidArgumentException;
 
 class InMemoryCookieJar extends CookieJar
 {
-    public function __construct($cookieJson = '')
+    /**
+     * @param string[]|SetCookie[] $cookieArray
+     */
+    public function __construct(array $cookieArray = [])
     {
-        parent::__construct();
-        $this->load($cookieJson);
-    }
-
-    public function getJson()
-    {
-        $json = [];
-        foreach ($this as $cookie) {
-            /** @var SetCookie $cookie */
-            if (CookieJar::shouldPersist($cookie)) {
-                $json[] = $cookie->toArray();
+        foreach ($cookieArray as $i => $cookie) {
+            if (is_string($cookie)) {
+                $cookieArray[$i] = SetCookie::fromString($cookie);
+            }
+            if (!($cookieArray[$i] instanceof SetCookie)) {
+                throw new InvalidArgumentException('Cookies must be string or SetCookie');
             }
         }
-
-        return \GuzzleHttp\json_encode($json);
-    }
-
-    /**
-     * @param string $json
-     */
-    public function load(string $json): void
-    {
-        if ($json === '') {
-            return;
-        }
-        $data = json_decode($json, true);
-        if (!is_array($data)) {
-            throw new \RuntimeException(sprintf("Invalid cookie JSON: %s", $json));
-        }
-        foreach ($data as $cookie) {
-            $this->setCookie(new SetCookie($cookie));
-        }
+        parent::__construct(true, $cookieArray);
     }
 }
